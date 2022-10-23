@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(sle-solve
     main.cpp
     parse_args.cpp
+    matrix.cpp
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
