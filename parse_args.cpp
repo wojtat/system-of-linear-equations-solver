@@ -16,7 +16,9 @@ static void print_usage(const std::string &program) {
 
 Arguments parse_arguments(int argc, char **argv) {
     Arguments args;
+    args.help = false;
     args.success = true;
+    args.multi_threaded = false;
     args.name = argv[0];
     int i = 1;
     while (i < argc) {
