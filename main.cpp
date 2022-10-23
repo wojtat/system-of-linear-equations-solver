@@ -11,8 +11,11 @@ int main(int argc, char **argv) {
     }
 
     Matrix m = {{1.0, 2.0, 3.0, 5.0},
+                {5.0, 4.0, 6.0, 3.0},
+                {5.0, 4.0, 6.0, 4.0},
                 {5.0, 4.0, 6.0, 7.0},
-                {2.0, 3.0, 4.0, 6.0}};
+                {2.0, 3.0, 4.0, 6.0},};
+
     row_reduce(m);
     for (auto &row : m) {
         for (auto &elem : row) {
@@ -20,6 +23,8 @@ int main(int argc, char **argv) {
         }
         std::cout << "\n";
     }
+    auto ranks = get_ranks(m);
+    std::cout << ranks.first << " " << ranks.second << "\n";
 
     return 0;
 }

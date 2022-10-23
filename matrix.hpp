@@ -16,4 +16,6 @@ void add_multiple_of_row(Matrix &matrix, size_t whence, double scalar, size_t wh
 
 void row_reduce(Matrix &matrix);
 
+std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix);
+
 #endif //SLE_SOLVER_MATRIX_HPP

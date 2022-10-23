@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "matrix.hpp"
 
 std::pair<size_t, size_t> get_dimensions(const Matrix &matrix) {
@@ -59,4 +60,28 @@ void row_reduce(Matrix &matrix) {
         // We have reduced one more row
         ++first_unreduced_row;
     }
+}
+
+std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix) {
+    auto dim = get_dimensions(reduced_augmented_matrix);
+    if (dim.second < 2) {
+        return std::make_pair(-1, -1);
+    }
+
+    // The augmented column will have a nonzero element sooner than the other columns
+    size_t A_augmented_rank = 0;
+    for (int row = dim.first - 1; row >= 0; --row) {
+        if (reduced_augmented_matrix[row][dim.second - 1] != 0.0) {
+            A_augmented_rank = row;
+            break;
+        }
+    }
+    size_t A_rank = 0;
+    for (int row = A_augmented_rank; row >= 0; --row) {
+        if (reduced_augmented_matrix[row][dim.second - 2] != 0.0) {
+            A_rank = row;
+            break;
+        }
+    }
+    return std::make_pair(A_rank, A_augmented_rank);
 }
