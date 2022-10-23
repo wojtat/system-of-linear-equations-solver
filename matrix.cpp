@@ -85,3 +85,17 @@ std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix) {
     }
     return std::make_pair(A_rank + 1, A_augmented_rank + 1);
 }
+
+std::vector<double> back_substitute(const Matrix &matrix) {
+    auto dim = get_dimensions(matrix);
+    std::vector<double> vars(dim.first);
+    for (int v = dim.first - 1; v >= 0; --v) {
+        auto value = matrix[v][dim.second - 1];
+        for (int prev = v + 1; prev < dim.first; ++prev) {
+            value -= vars[prev] * matrix[v][prev];
+        }
+        vars[v] = value / matrix[v][v];
+    }
+
+    return vars;
+}

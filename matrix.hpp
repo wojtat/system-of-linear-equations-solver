@@ -18,4 +18,6 @@ void row_reduce(Matrix &matrix);
 
 std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix);
 
+std::vector<double> back_substitute(const Matrix &matrix);
+
 #endif //SLE_SOLVER_MATRIX_HPP
