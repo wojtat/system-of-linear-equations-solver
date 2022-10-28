@@ -103,7 +103,7 @@ Vector back_substitute(const Matrix &matrix) {
     return vars;
 }
 
-Vector back_substitute(const Matrix &matrix, size_t num_free_variables) {
+std::vector<size_t> find_column_mapping(const Matrix &matrix, size_t num_free_variables) {
     auto dim = get_dimensions(matrix);
 
     // Find pivot and free variable locations
@@ -123,6 +123,11 @@ Vector back_substitute(const Matrix &matrix, size_t num_free_variables) {
             }
         }
     }
+    return column_mapping;
+}
+
+Vector back_substitute(const Matrix &matrix, size_t num_free_variables, const std::vector<size_t> &column_mapping) {
+    auto dim = get_dimensions(matrix);
 
     Vector vars(dim.first + num_free_variables);
 
@@ -158,7 +163,23 @@ Solution solve_system(const Matrix &augmented) {
     if (A_rank == A_augmented_rank) {
         auto num_free_variables = dim.second - dim.first - 1;
         if (num_free_variables > 0) {
-            solution.particular_solution = back_substitute(copy, num_free_variables);
+            auto column_mapping = find_column_mapping(copy, num_free_variables);
+            auto sol = back_substitute(copy, num_free_variables, column_mapping);
+
+            for (size_t v_index = dim.first; v_index < sol.size(); ++v_index) {
+                auto v = column_mapping[v_index];
+                Matrix homogenous(dim.first, Vector(dim.first + 1, 0.0));
+                for (size_t row = 0; row < dim.first; ++row) {
+                    for (size_t col = 0; col < dim.first; ++col) {
+                        homogenous[row][col] = copy[row][column_mapping[col]];
+                    }
+                    homogenous[row][dim.first] = -copy[row][v];
+                }
+
+                solution.base.push_back(back_substitute(homogenous));
+            }
+
+            solution.particular_solution = std::move(sol);
         } else {
             // num_free_variables == 0
             solution.particular_solution = back_substitute(copy);
