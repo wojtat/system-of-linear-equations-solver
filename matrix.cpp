@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "matrix.hpp"
 
 std::pair<size_t, size_t> get_dimensions(const Matrix &matrix) {
@@ -70,14 +69,14 @@ std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix) {
 
     // The augmented column will have a nonzero element sooner than the other columns
     size_t A_augmented_rank = -1;
-    for (int row = dim.first - 1; row >= 0; --row) {
+    for (int row = (int)dim.first - 1; row >= 0; --row) {
         if (reduced_augmented_matrix[row][dim.second - 1] != 0.0) {
             A_augmented_rank = row;
             break;
         }
     }
     size_t A_rank = -1;
-    for (int row = A_augmented_rank; row >= 0; --row) {
+    for (int row = (int)A_augmented_rank; row >= 0; --row) {
         if (reduced_augmented_matrix[row][dim.second - 2] != 0.0) {
             A_rank = row;
             break;
@@ -86,16 +85,84 @@ std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix) {
     return std::make_pair(A_rank + 1, A_augmented_rank + 1);
 }
 
-std::vector<double> back_substitute(const Matrix &matrix) {
+Vector back_substitute(const Matrix &matrix) {
     auto dim = get_dimensions(matrix);
-    std::vector<double> vars(dim.first);
-    for (int v = dim.first - 1; v >= 0; --v) {
+    Vector vars(dim.first);
+    for (int v = (int)dim.first - 1; v >= 0; --v) {
         auto value = matrix[v][dim.second - 1];
-        for (int prev = v + 1; prev < dim.first; ++prev) {
+        for (int prev = v + 1; prev < (int)dim.first; ++prev) {
             value -= vars[prev] * matrix[v][prev];
         }
         vars[v] = value / matrix[v][v];
     }
 
     return vars;
+}
+
+Vector back_substitute(const Matrix &matrix, size_t num_free_variables) {
+    auto dim = get_dimensions(matrix);
+
+    // Find pivot and free variable locations
+    std::vector<size_t> column_mapping(dim.second - 1);
+    {
+        size_t free_var_index = dim.first;
+        size_t pivot_index = 0;
+        size_t row = 0;
+        for (size_t col = 0; col < dim.second - 1; ++col) {
+            if (matrix[row][col] == 0.0) {
+                // Free variable
+                column_mapping[free_var_index++] = col;
+            } else {
+                // Pivot
+                column_mapping[pivot_index++] = col;
+                ++row;
+            }
+        }
+    }
+
+    Vector vars(dim.first + num_free_variables);
+
+    for (int v_index = (int)(dim.first + num_free_variables - 1); v_index >= (int)dim.first; --v_index) {
+        vars[column_mapping[v_index]] = 0.0;
+    }
+    for (int v_index = (int)dim.first - 1; v_index >= 0; --v_index) {
+        auto v = column_mapping[v_index];
+        auto value = matrix[v_index][dim.second - 1];
+        for (int prev = (int)v + 1; prev < (int)dim.second - 1; ++prev) {
+            value -= vars[prev] * matrix[v_index][prev];
+        }
+        vars[v] = value / matrix[v_index][v];
+    }
+
+    return vars;
+}
+
+Solution solve_system(const Matrix &augmented) {
+    Solution solution;
+
+    auto copy = augmented;
+    row_reduce(copy);
+    size_t A_rank, A_augmented_rank;
+    {
+        auto ranks = get_ranks(copy);
+        A_rank = ranks.first;
+        A_augmented_rank = ranks.second;
+    }
+    copy.resize(A_augmented_rank);
+
+    auto dim = get_dimensions(copy);
+    if (A_rank == A_augmented_rank) {
+        auto num_free_variables = dim.second - dim.first - 1;
+        if (num_free_variables > 0) {
+            solution.particular_solution = back_substitute(copy, num_free_variables);
+        } else {
+            // num_free_variables == 0
+            solution.particular_solution = back_substitute(copy);
+        }
+    } else {
+        // A_rank < A_augmented_rank
+        // No solution
+    }
+
+    return solution;
 }

@@ -6,18 +6,15 @@
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
 
-std::pair<size_t, size_t> get_dimensions(const Matrix &matrix);
+enum NumberOfSolutions {
+    Infinite = -1,
+};
 
-void swap_rows(Matrix &matrix, size_t i, size_t j);
+struct Solution {
+    Vector particular_solution;
+    Matrix base;
+};
 
-void scale_row(Matrix &matrix, size_t i, double scalar);
-
-void add_multiple_of_row(Matrix &matrix, size_t whence, double scalar, size_t where);
-
-void row_reduce(Matrix &matrix);
-
-std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix);
-
-std::vector<double> back_substitute(const Matrix &matrix);
+Solution solve_system(const Matrix &augmented);
 
 #endif //SLE_SOLVER_MATRIX_HPP
