@@ -169,16 +169,24 @@ Solution solve_system(const Matrix &augmented) {
             auto sol = back_substitute(copy, num_free_variables, column_mapping);
 
             for (size_t v_index = dim.first; v_index < sol.size(); ++v_index) {
-                auto v = column_mapping[v_index];
                 Matrix homogenous(dim.first, Vector(dim.first + 1, 0.0));
                 for (size_t row = 0; row < dim.first; ++row) {
                     for (size_t col = 0; col < dim.first; ++col) {
                         homogenous[row][col] = copy[row][column_mapping[col]];
                     }
-                    homogenous[row][dim.first] = -copy[row][v];
+                    homogenous[row][dim.first] = -copy[row][column_mapping[v_index]];
                 }
 
-                solution.base.push_back(back_substitute(homogenous));
+                auto base_vec_short = back_substitute(homogenous);
+                Vector base_vec(sol.size());
+                for (size_t v = 0; v < dim.first; ++v) {
+                    base_vec[column_mapping[v]] = base_vec_short[v];
+                }
+                for (size_t v = dim.first; v < sol.size(); ++v) {
+                    base_vec[column_mapping[v]] = 0.0;
+                }
+                base_vec[column_mapping[v_index]] = 1.0;
+                solution.base.push_back(std::move(base_vec));
             }
 
             solution.particular_solution = std::move(sol);
