@@ -1,4 +1,5 @@
 #include "matrix.hpp"
+#include <algorithm>
 
 std::pair<size_t, size_t> get_dimensions(const Matrix &matrix) {
     return std::make_pair(matrix.size(), matrix[0].size());
@@ -61,27 +62,30 @@ void row_reduce(Matrix &matrix) {
     }
 }
 
-std::pair<size_t, size_t> get_ranks(const Matrix &reduced_augmented_matrix) {
-    auto dim = get_dimensions(reduced_augmented_matrix);
+std::pair<size_t, size_t> get_ranks(const Matrix &matrix) {
+    auto dim = get_dimensions(matrix);
     if (dim.second < 2) {
         return std::make_pair(-1, -1);
     }
 
-    // The augmented column will have a nonzero element sooner than the other columns
+    auto non_zero = [](double x) {
+        return x != 0.0;
+    };
     size_t A_augmented_rank = -1;
     for (int row = (int)dim.first - 1; row >= 0; --row) {
-        if (reduced_augmented_matrix[row][dim.second - 1] != 0.0) {
+        if (std::any_of(matrix[row].begin(), matrix[row].end(), non_zero)) {
             A_augmented_rank = row;
             break;
         }
     }
     size_t A_rank = -1;
-    for (int row = (int)A_augmented_rank; row >= 0; --row) {
-        if (reduced_augmented_matrix[row][dim.second - 2] != 0.0) {
+    for (int row = A_augmented_rank; row >= 0; --row) {
+        if (std::any_of(matrix[row].begin(), matrix[row].end() - 1, non_zero)) {
             A_rank = row;
             break;
         }
     }
+
     return std::make_pair(A_rank + 1, A_augmented_rank + 1);
 }
 
