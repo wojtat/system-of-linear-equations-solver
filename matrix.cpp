@@ -119,7 +119,9 @@ std::vector<size_t> find_column_mapping(const Matrix &matrix, size_t num_free_va
             } else {
                 // Pivot
                 column_mapping[pivot_index++] = col;
-                ++row;
+                if (row < dim.first - 1) {
+                    ++row;
+                }
             }
         }
     }
