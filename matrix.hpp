@@ -6,10 +6,6 @@
 using Vector = std::vector<double>;
 using Matrix = std::vector<Vector>;
 
-enum NumberOfSolutions {
-    Infinite = -1,
-};
-
 struct Solution {
     Vector particular_solution;
     Matrix base;
