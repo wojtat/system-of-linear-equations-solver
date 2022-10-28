@@ -201,3 +201,31 @@ Solution solve_system(const Matrix &augmented) {
 
     return solution;
 }
+
+void print_solution(std::ostream &out, const Solution &solution) {
+    if (solution.particular_solution.empty()) {
+        out << "No solution\n";
+        return;
+    }
+    if (auto num_base_vectors = solution.base.size()) {
+        out << "Infinitely many solutions\n";
+        out << "Particular solution:\n";
+        for (auto e: solution.particular_solution) {
+            out << e << " ";
+        }
+        out << "\nBase of the homogeneous solution set:\n";
+        for (const auto &base_vec : solution.base) {
+            for (auto e: base_vec) {
+                out << e << " ";
+            }
+            out << "\n";
+        }
+    } else {
+        out << "One unique solution:\n";
+        for (auto e: solution.particular_solution) {
+            std::cout << e << " ";
+        }
+        out << "\n";
+    }
+}
+

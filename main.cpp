@@ -15,10 +15,7 @@ int main(int argc, char **argv) {
                 {2.0, 3.0, 4.0, 6.0},};
 
     auto solution = solve_system(m);
-
-    for (auto e : solution.particular_solution) {
-        std::cout << e << " ";
-    }
+    print_solution(std::cout, solution);
 
     return 0;
 }
