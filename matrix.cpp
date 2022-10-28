@@ -207,7 +207,7 @@ void print_solution(std::ostream &out, const Solution &solution) {
         out << "No solution\n";
         return;
     }
-    if (auto num_base_vectors = solution.base.size()) {
+    if (solution.base.size() > 0) {
         out << "Infinitely many solutions\n";
         out << "Particular solution:\n";
         for (auto e: solution.particular_solution) {
