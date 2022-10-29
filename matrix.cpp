@@ -104,7 +104,7 @@ Vector back_substitute(const Matrix &matrix) {
     return vars;
 }
 
-std::vector<size_t> find_column_mapping(const Matrix &matrix, size_t num_free_variables) {
+std::vector<size_t> find_column_mapping(const Matrix &matrix) {
     auto dim = get_dimensions(matrix);
 
     // Find pivot and free variable locations
@@ -166,7 +166,7 @@ Solution solve_system(const Matrix &augmented) {
     if (A_rank == A_augmented_rank) {
         auto num_free_variables = dim.second - dim.first - 1;
         if (num_free_variables > 0) {
-            auto column_mapping = find_column_mapping(copy, num_free_variables);
+            auto column_mapping = find_column_mapping(copy);
             auto sol = back_substitute(copy, num_free_variables, column_mapping);
 
             for (size_t v_index = dim.first; v_index < sol.size(); ++v_index) {
