@@ -1,5 +1,6 @@
 #include "matrix.hpp"
 #include <algorithm>
+#include <sstream>
 
 std::pair<size_t, size_t> get_dimensions(const Matrix &matrix) {
     return std::make_pair(matrix.size(), matrix[0].size());
@@ -229,3 +230,44 @@ void print_solution(std::ostream &out, const Solution &solution) {
     }
 }
 
+Matrix read_matrix(std::istream &in) {
+    std::string line;
+
+    size_t r, s;
+    if (std::getline(in, line)) {
+        std::stringstream line_stream(line);
+        int r_int, s_int;
+        if (!(line_stream >> r_int >> s_int)) {
+            return {};
+        }
+        if (r_int < 1 || s_int < 1) {
+            return {};
+        }
+        r = (size_t)r_int;
+        s = (size_t)s_int;
+    }
+
+    Matrix matrix(r, Vector(s + 1));
+
+    size_t row = 0;
+    while (std::getline(in, line)) {
+        if (row >= r) {
+            return {};
+        }
+        std::stringstream line_stream(line);
+        size_t col = 0;
+        double elem;
+        while (line_stream >> elem) {
+            if (col >= s + 1) {
+                return {};
+            }
+            matrix[row][col] = elem;
+            ++col;
+        }
+        if (col != s + 1) {
+            return {};
+        }
+        ++row;
+    }
+    return matrix;
+}

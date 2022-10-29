@@ -12,6 +12,8 @@ struct Solution {
     Matrix base;
 };
 
+Matrix read_matrix(std::istream &in);
+
 Solution solve_system(const Matrix &augmented);
 
 void print_solution(std::ostream &out, const Solution &solution);

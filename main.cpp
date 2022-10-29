@@ -10,11 +10,14 @@ int main(int argc, char **argv) {
         return 0;
     }
 
-    Matrix m = {{1.0, 2.0, 3.0, 5.0},
-                {5.0, 4.0, 6.0, 7.0},
-                {2.0, 3.0, 4.0, 6.0},};
+    Matrix matrix = read_matrix(std::cin);
+    if (matrix.empty()) {
+        // Invalid input
+        std::cerr << "Failed to read matrix. Malformed input\n";
+        return 2;
+    }
 
-    auto solution = solve_system(m);
+    auto solution = solve_system(matrix);
     print_solution(std::cout, solution);
 
     return 0;
