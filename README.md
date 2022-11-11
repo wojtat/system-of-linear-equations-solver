@@ -13,20 +13,38 @@ a `s` je počet proměnných. Následuje `r` řádků o `s + 1` reálných čís
 Každý `i`-tý řádek určuje jednu rovnici. Prvních `s` čísel každého řádku odpovídá
 jednomu řádku matice soustavy a poslední číslo v řádku pak pravé straně rovnice.
 
-Příklady vstupu:
+## Příklady vstupu a výstupu:
+1. Jediné řešení
 ```
 2 2
 2.0 4.0 3.5
 3.0 4.0 1.0
 ```
 ```
+One unique solution:
+-2.5 2.125
+```
+2. Nekonečně mnoho řešení
+```
 1 3
 2.0 4.0 3.5 0.0
 ```
+```
+Infinitely many solutions
+Particular solution:
+0 0 0
+Base of the homogeneous solution set:
+-2 1 0
+-1.75 0 1
+```
+3. Žádné řešení
 ```
 4 2
 2.0 4.0 3.5
 3.0 4.0 1.0
 5.0 4.0 4.7
 4.0 1.6 2.3
+```
+```
+No solution
 ```
