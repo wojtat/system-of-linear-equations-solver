@@ -3,6 +3,15 @@
 SLE solver je program pro řešení soustav lineárních rovnic v maticovém tvaru
 pomocí Gaussovy eliminační metody.
 
+# Implementace
+
+Program přečte rozšířenou matici soustavy ze standardního vstupu. Na tu následně
+aplikuje Gaussovu eliminační metodu. Tím je obdržena matice v horním trojúhelníkovém
+tvaru. Dále triviálně zjistí hodnosti matice soustavy a rozšířené matice soustavy.
+Frobeniova věta řekne, jestli má soustava řešení. Pokud ano, je zahájeno zpětné
+dosazení a v případě, že některé řádky byly lineárně závislé, je dopočtena báze
+afinního podprostoru řešení. Konečně je výsledek vypsán na standardní výstup.
+
 # Vstupní formát
 
 Program očekává rozšířenou matici soustavy na standardním vstupu (`stdin`)
