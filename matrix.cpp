@@ -54,10 +54,12 @@ void row_reduce(Matrix &matrix) {
         }
         // If it exists, swap it with the first unreduced row
         swap_rows(matrix, first_unreduced_row, nonzero_unreduced_row);
+
         // And reduce all the following rows
         for (size_t row = first_unreduced_row + 1; row < dim.first; ++row) {
             add_multiple_of_row(matrix, first_unreduced_row, -matrix[row][col] / matrix[first_unreduced_row][col], row);
         }
+
         // We have reduced one more row
         ++first_unreduced_row;
     }

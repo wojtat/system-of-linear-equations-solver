@@ -11,14 +11,12 @@ static void print_usage(const std::string &program) {
     std::cout << "equations from stdin and uses Gaussian elimination to solve it.\n";
     std::cout << "Possible OPTIONS:\n";
     std::cout << "\t--help, -h: Print this message\n";
-    std::cout << "\t--multi-threaded, -mt: Use multiple threads\n";
 }
 
 Arguments parse_arguments(int argc, char **argv) {
     Arguments args;
     args.help = false;
     args.success = true;
-    args.multi_threaded = false;
     args.name = argv[0];
     int i = 1;
     while (i < argc) {
@@ -26,8 +24,6 @@ Arguments parse_arguments(int argc, char **argv) {
         if (arg == "-h" || arg == "--help") {
             args.help = true;
             print_usage(args.name);
-        } else if (arg == "-m" || arg == "--multi-threaded") {
-            args.multi_threaded = true;
         } else {
             args.success = false;
             print_unrecognised_argument(arg);

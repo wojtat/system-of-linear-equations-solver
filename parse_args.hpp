@@ -6,7 +6,6 @@
 struct Arguments {
     bool success;
     bool help;
-    bool multi_threaded;
     std::string name;
 };
 
