@@ -72,7 +72,7 @@ std::pair<size_t, size_t> get_ranks(const Matrix &matrix) {
     }
 
     auto non_zero = [](double x) {
-        return x != 0.0;
+        return std::abs(x) >= 1e-10;
     };
     size_t A_augmented_rank = -1;
     for (int row = (int)dim.first - 1; row >= 0; --row) {
@@ -116,7 +116,7 @@ std::vector<size_t> find_column_mapping(const Matrix &matrix) {
         size_t pivot_index = 0;
         size_t row = 0;
         for (size_t col = 0; col < dim.second - 1; ++col) {
-            if (matrix[row][col] == 0.0) {
+            if (std::abs(matrix[row][col]) <= 1e-10) {
                 // Free variable
                 column_mapping[free_var_index++] = col;
             } else {
